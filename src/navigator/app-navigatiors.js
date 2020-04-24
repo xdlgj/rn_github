@@ -3,6 +3,7 @@ import {createStackNavigator} from 'react-navigation-stack'
 
 import WelcomePage from '../pages/welcome-page'
 import HomePage from '../pages/home-page'
+import DetailPage from '../pages/detail-page'
 
 const InitNavigator = createStackNavigator(
   {
@@ -22,6 +23,9 @@ const MainNavigator = createStackNavigator(
       navigationOptions: {
         header: null, //隐藏头部
       },
+    },
+    DetailPage: {
+      screen: DetailPage,
     }
   }
 )

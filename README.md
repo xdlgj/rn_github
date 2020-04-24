@@ -28,7 +28,7 @@ yarn add react-native-vector-icons
 在android/app/build.gradle文件中添加如下内容
 ```
 apply plugin: "com.android.application"
-+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
++ apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 import com.android.build.OutputFile
 ```
