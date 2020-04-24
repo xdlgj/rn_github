@@ -5,8 +5,11 @@ import {
   StyleSheet,
   Button,
 } from 'react-native'
+import {connect} from 'react-redux'
 
-export default class MyPage extends Component {
+import actions from '../action'
+
+class MyPage extends Component {
   render () {
     const {navigation} = this.props;
     return (
@@ -14,14 +17,7 @@ export default class MyPage extends Component {
         <Text style={styles.welcome}>MyPage</Text>
         <Button 
           title={'修改主题'}
-          onPress={() => navigation.setParams(
-            {
-              theme: {
-                tintColor: 'red',
-                updateTime: new Date().getTime(),
-              }
-            }
-          )}
+          onPress={() => {this.props.onChangeTheme('pink')}}
         />
       </View>
     )
@@ -40,3 +36,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   }
 })
+
+const mapDispatchToProps = dispatch => ({
+  onChangeTheme: theme => dispatch(actions.onChangeTheme(theme))
+})
+
+export default connect(null, mapDispatchToProps)(MyPage)
