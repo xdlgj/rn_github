@@ -5,6 +5,7 @@ import WelcomePage from '../pages/welcome-page'
 import HomePage from '../pages/home-page'
 import DetailPage from '../pages/detail-page'
 import FetchDemoPage from '../pages/fetch-demo-page'
+import DataStoreDemoPage from '../pages/data-store-demo-page'
 
 const InitNavigator = createStackNavigator(
   {
@@ -30,6 +31,9 @@ const MainNavigator = createStackNavigator(
     },
     FetchDemoPage: {
       screen: FetchDemoPage,
+    },
+    DataStoreDemoPage: {
+      screen: DataStoreDemoPage,
     }
   }
 )

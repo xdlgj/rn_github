@@ -64,6 +64,10 @@ class PopularTab extends Component{
           title='跳转到详FetchDemo'
           onPress={() => {NavigationUtil.goPage({}, 'FetchDemoPage')}}
         />
+        <Button
+          title='跳转到详DataStoreDemo'
+          onPress={() => {NavigationUtil.goPage({}, 'DataStoreDemoPage')}}
+        />
       </View>
     )
   }
