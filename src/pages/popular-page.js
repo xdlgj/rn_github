@@ -23,7 +23,7 @@ const THEME_COLOR = 'red'
 export default class PopularPage extends Component {
   constructor (props) {
     super(props);
-    this.tabNames = ['Java', 'Android', 'IOS', 'Python', 'JS']
+    this.tabNames = ['Java', 'Android', 'IOS', 'Python', 'JS', 'java111111']
   }
   _genTabs(){
     const tabs = {};
@@ -79,7 +79,7 @@ class PopularTab extends Component{
   _store = () => {
     const {popular} = this.props;
     let store = popular[this.storeName]
-    if (!store) {
+    if (!store || !store.items) { //有些store中没有items
       store = {
         items: [],
         isLoading: false,
@@ -114,7 +114,7 @@ class PopularTab extends Component{
     )
   }
   genIndicator = () => {
-    return this._store().hideLoadingMore ? null :
+    return this._store().hideLoadingMore || this._store().items.length < pageSize ? null :
       <View style={styles.indicatorContainer}>
         <ActivityIndicator 
           style={styles.indicator}

@@ -38,7 +38,7 @@ export default function doAction(state = defaultState, action) {
           hideLoadingMore: true,
         }
       }
-    case Types.POPULAR_LOAD_MORE_FAIL: // 下拉刷新失败
+    case Types.POPULAR_REFRESH_FAIL: // 下拉刷新失败
       return {
         ...state,
         [action.storeName]: {
@@ -47,7 +47,6 @@ export default function doAction(state = defaultState, action) {
         }
       }
     case Types.POPULAR_LOAD_MORE_SUCCESS: //上拉加载更多成功
-      console.log('success', action.pageIndex)
       return {
         ...state,
         [action.storeName]: {
@@ -58,8 +57,6 @@ export default function doAction(state = defaultState, action) {
         }
       }
     case Types.POPULAR_LOAD_MORE_FAIL: //上拉加载更多失败
-      console.log('fail')
-      console.log('POPULAR_LOAD_MORE_FAIL', action.projectModes, action.pageIndex)
       return {
         ...state,
         [action.storeName]: {
