@@ -8,16 +8,23 @@ import {
 import {connect} from 'react-redux'
 
 import actions from '../action'
+import NavigationUtil from '../navigator/navigation-util'
 
 class MyPage extends Component {
   render () {
-    const {navigation} = this.props;
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>MyPage</Text>
-        <Button 
-          title={'修改主题'}
-          onPress={() => {this.props.onChangeTheme('pink')}}
+      <View>
+        <Button
+          title='跳转到详情页'
+          onPress={() => {NavigationUtil.goPage({}, 'DetailPage')}}
+        />
+        <Button
+          title='跳转到详FetchDemo'
+          onPress={() => {NavigationUtil.goPage({}, 'FetchDemoPage')}}
+        />
+        <Button
+          title='跳转到详DataStoreDemo'
+          onPress={() => {NavigationUtil.goPage({}, 'DataStoreDemoPage')}}
         />
       </View>
     )
