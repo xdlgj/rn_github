@@ -15,10 +15,11 @@ import Toast from 'react-native-easy-toast'
 import NavigationUtil from '../navigator/navigation-util'
 import actions from '../action'
 import PopularItem from '../common/popular-item'
+import NavigationBar from '../common/navigation-bar'
 
 const URL = 'https://api.github.com/search/repositories?q='
 const QUERY_STR = '&sort=stars'
-const THEME_COLOR = 'red'
+const THEME_COLOR = '#678'
 
 export default class PopularPage extends Component {
   constructor (props) {
@@ -38,23 +39,33 @@ export default class PopularPage extends Component {
     return tabs;
   }
   render () {
+    let statusBar = {
+      backgroundColor: THEME_COLOR
+    }
+    let navigationBar = <NavigationBar 
+        title={'最热'}
+        statusBar={statusBar}
+        style={{backgroundColor: THEME_COLOR}}
+
+      />
     const TabNavigator = createAppContainer(createMaterialTopTabNavigator(
       this._genTabs(),
       {
         tabBarOptions: {
           tabStyle: styles.tabStyle,
-          upperCaseLabel: false,
-          scrollEnabled: true,
+          upperCaseLabel: false, //是否是标签大写，默认为true
+          scrollEnabled: true, // 是否支持选项卡滚动， 默认为false
           style: {
-            backgroundColor: '#a67',
+            backgroundColor: '#a67', 
           },
-          indicatorStyle: styles.indicatorStyle,
-          labelStyle: styles.labelStyle,
+          indicatorStyle: styles.indicatorStyle, //标签指示器样式
+          labelStyle: styles.labelStyle, //文本样式
         }
       }
     ))
     return (
       <View style={styles.container}>
+        {navigationBar}
         <TabNavigator />
       </View>
     )
