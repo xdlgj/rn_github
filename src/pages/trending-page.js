@@ -3,42 +3,218 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
+  FlatList,
+  RefreshControl,
+  ActivityIndicator
 } from 'react-native'
+import {createMaterialTopTabNavigator} from 'react-navigation-tabs'
+import {createAppContainer} from 'react-navigation'
 import {connect} from 'react-redux'
+import Toast from 'react-native-easy-toast'
 
+import NavigationUtil from '../navigator/navigation-util'
 import actions from '../action'
+import TrendingItem from '../common/trending-item'
+import NavigationBar from '../common/navigation-bar'
 
-class TrendingPage extends Component {
+const URL = 'https://github.com/trending/'
+const QUERY_STR = '&sort=stars'
+const THEME_COLOR = '#678'
+
+export default class TrendingPage extends Component {
+  constructor (props) {
+    super(props);
+    this.tabNames = ['C', 'C#', 'PHP', 'JavaScript']
+  }
+  _genTabs(){
+    const tabs = {};
+    this.tabNames.forEach((item, index) => {
+      tabs[`tab${index}`] = {
+        screen: props => <TrendingTabPage {...props} tabLabel={item}/>,
+        navigationOptions: {
+          title: item,
+        },
+      };
+    });
+    return tabs;
+  }
   render () {
-    const {navigation} = this.props;
+    let statusBar = {
+      backgroundColor: THEME_COLOR
+    }
+    let navigationBar = <NavigationBar 
+        title={'趋势'}
+        statusBar={statusBar}
+        style={{backgroundColor: THEME_COLOR}}
+
+      />
+    const TabNavigator = createAppContainer(createMaterialTopTabNavigator(
+      this._genTabs(),
+      {
+        tabBarOptions: {
+          tabStyle: styles.tabStyle,
+          upperCaseLabel: false, //是否是标签大写，默认为true
+          scrollEnabled: true, // 是否支持选项卡滚动， 默认为false
+          style: {
+            backgroundColor: '#a67', 
+          },
+          indicatorStyle: styles.indicatorStyle, //标签指示器样式
+          labelStyle: styles.labelStyle, //文本样式
+        }
+      }
+    ))
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>TrendingPage</Text>
-        <Button 
-          title={'修改主题'}
-          onPress={() => {this.props.onChangeTheme('blue')}}
+        {navigationBar}
+        <TabNavigator />
+      </View>
+    )
+  }
+}
+
+const pageSize = 10
+class TrendingTab extends Component{
+
+  constructor(props) {
+    super(props);
+    const {tabLabel} = this.props;
+    this.storeName = tabLabel;
+  }
+
+  genFetchUrl = (key) => {
+    return URL + key + '?since=daily';
+  }
+  /**
+   * 获取和当前页面有关的数据
+   */
+  _store = () => {
+    const {trending} = this.props;
+    let store = trending[this.storeName]
+    if (!store || !store.items) { //有些store中没有items
+      store = {
+        items: [],
+        isLoading: false,
+        projectModes: [], //要显示的数据
+        hideLoadingMore: true //默认隐藏加载更多
+      }
+    }
+    return store;
+  }
+  loadData = (loadMore) => {
+    const {onRefreshTrending, onLoadMoreTrending} = this.props;
+    const store = this._store();
+    const url = this.genFetchUrl(this.storeName);
+    if (loadMore) {
+      onLoadMoreTrending(this.storeName, ++store.pageIndex, pageSize, store.items, callBack => {
+        this.refs.toast.show('没有更多了');
+      })
+    } else {
+      onRefreshTrending(this.storeName, url, pageSize)
+    }
+  }
+
+  renderItem = (data) => {
+    const item = data.item
+    return (
+      <TrendingItem 
+        item={item}
+        onSelect={() => {
+
+        }}  
+      />
+    )
+  }
+  genIndicator = () => {
+    return this._store().hideLoadingMore || this._store().items.length < pageSize ? null :
+      <View style={styles.indicatorContainer}>
+        <ActivityIndicator 
+          style={styles.indicator}
+        />
+        <Text>正在加载更多</Text>
+      </View>
+  }
+
+  componentDidMount () {
+    this.loadData();
+  }
+  render () {
+    let store = this._store()
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={store.projectModes}
+          renderItem={data => this.renderItem(data)}
+          keyExtractor={item => '' + item.id}
+          refreshControl={
+            <RefreshControl
+              title={'Loading'}
+              tintColor={THEME_COLOR}
+              colors={[THEME_COLOR]}
+              refreshing={store.isLoading}
+              onRefresh={this.loadData}
+              tintColor={THEME_COLOR}
+            />
+          }
+          ListFooterComponent={() => this.genIndicator()}
+          onEndReached={() => {
+            console.log('-------onEndReached---------')
+            setTimeout(() => {//为了确保onMomentumScrollBegin先执行
+              if (this.canLoadMore) {
+                this.loadData(true)
+                this.canLoadMore = false
+              }
+            }, 100)
+          }}
+          onEndReachedThreshold={0.5}
+          onMomentumScrollBegin={() => {//fix初始化滚动调用onEndReached的问题
+            this.canLoadMore=true
+            console.log('--------onMomentumScrollBegin----------')
+          }}
+        />
+        <Toast
+          ref={'toast'}
+          position={'center'}
         />
       </View>
     )
   }
 }
 
+const mapStateToProps = state => ({
+  trending: state.trending
+})
+const mapDispatchToProps = dispatch => ({
+  onRefreshTrending: (storeName, url, pageSize) => dispatch(actions.onRefreshTrending(storeName, url, pageSize)),
+  onLoadMoreTrending: (storeName, pageIndex, pageSize, items, callBack) => dispatch(actions.onLoadMoreTrending(storeName, pageIndex, pageSize, items, callBack))
+})
+
+const TrendingTabPage =  connect(mapStateToProps, mapDispatchToProps)(TrendingTab)
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'red',
   },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
+  },
+  tabStyle: {
+    minWidth: 50,
+  },
+  indicatorStyle: {
+    height: 2,
+    backgroundColor: 'white'
+  },
+  labelStyle: {
+    fontSize: 13,
+    marginTop: 6,
+    marginBottom: 6,
+  },
+  indicatorContainer: {
+    alignItems: 'center'
+  },
+  indicator: {
+    color: 'red',
+    margin: 10
   }
 })
-
-const mapDispatchToProps = dispatch => ({
-  onChangeTheme: theme => dispatch(actions.onChangeTheme(theme))
-})
-
-export default connect(null, mapDispatchToProps)(TrendingPage)

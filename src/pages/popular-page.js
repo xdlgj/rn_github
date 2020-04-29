@@ -5,7 +5,7 @@ import {
   StyleSheet,
   FlatList,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native'
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs'
 import {createAppContainer} from 'react-navigation'
@@ -74,7 +74,6 @@ export default class PopularPage extends Component {
 
 const pageSize = 10
 class PopularTab extends Component{
-
   constructor(props) {
     super(props);
     const {tabLabel} = this.props;
@@ -199,7 +198,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   tabStyle: {
-    minWidth: 50,
+    minWidth: 50, // 会导致tabStyle初次加载时闪烁
   },
   indicatorStyle: {
     height: 2,

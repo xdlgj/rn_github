@@ -12,7 +12,7 @@ export default class WelcomePage extends Component {
     this.timer = setTimeout(()=>{
       //跳转到首页
       NavigationUtil.restToHomePage(this.props)
-    }, 2000)
+    }, 1000)
   }
   componentWillUnmount () {
     //页面销毁，清空计时器

@@ -1,6 +1,11 @@
 import {AsyncStorage} from 'react-native'
+import Trending from 'GitHubTrending'
+
+const AUTH_TOKEN = 'fd82d1e882462e23b8e88aa82198f166'
+export const FLAG_STORAGR = {flag_popular: 'popular', flag_trending: 'trending'}
 
 export default class DataStore {
+  
   /**
    * 保存数据
    * @param {*} url 
@@ -35,10 +40,12 @@ export default class DataStore {
   /**
    * 获取网络数据
    * @param {} url 
+   * @param {} flag
    */
-  fecthNetData(url) {
+  fecthNetData(url, flag) {
     return new Promise((resolve, reject) => {
-      fetch(url)
+      if (flag !== FLAG_STORAGR.flag_trending){
+        fetch(url, flag)
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -52,19 +59,34 @@ export default class DataStore {
         .catch((error) => {
           reject(error);
         })
+      } else {
+        console.log(url)
+        new Trending(AUTH_TOKEN).fetchTrending(url)
+          .then(items => {
+            if (!items){
+              throw new Error('responseData is null')
+            }
+            this.saveData(url, items)
+            resolve(items)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      }
     })
   }
   /**
    * 离线缓存入口, 优先获取本地数据，如果无本地数据或本地数据过期则获取网络数据
    * @param {*} url 
+   * @param {*} flag
    */
-  fetchData(url) {
+  fetchData(url, flag) {
     return new Promise((resolve, reject) => {
       this.fetchLocalData(url).then((wrapData) => {
         if (wrapData && DataStore.checkTimestampValid(wrapData.timestamp)){
           resolve(wrapData)
         } else {
-          this.fecthNetData(url).then((data) => {
+          this.fecthNetData(url, flag).then((data) => {
             resolve(this._wrapData(data));
           }).catch((error) => {
             reject(error);
@@ -97,9 +119,7 @@ export default class DataStore {
     targetDate.setTime(timestamp);
     if (currentDate.getMonth() !== targetDate.getMonth()) return false;
     if (currentDate.getDate() !== targetDate.getDate()) return false;
-    if (currentDate.getHours() - targetDate.getHours() > 4) return false;
+    if (currentDate.getHours() - targetDate.getHours() > 1) return false;
     return true
   }
-
-
 }
