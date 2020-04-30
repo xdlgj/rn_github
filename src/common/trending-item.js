@@ -30,7 +30,7 @@ export default class TrendingItem extends Component {
     let description = '<p>' + item.description + '</p>'
     return (
       <TouchableOpacity
-        opPress = {this.props.onSelect}
+        onPress = {this.props.onSelect}
       >
         <View style={styles.cell_container}>
           <Text style={styles.title}>
@@ -53,6 +53,7 @@ export default class TrendingItem extends Component {
               {item.contributors.map((res, i, arr) => {
                 return (
                   <Image
+                    key={i}
                     style={{height: 22, width: 22, margin: 2}}
                     source={{uri: arr[i]}}
                   />

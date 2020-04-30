@@ -3,7 +3,6 @@ import {
   Modal, 
   View, 
   Text,
-  Text,
   TouchableOpacity,
   StyleSheet
 } from 'react-native'
@@ -55,13 +54,14 @@ export default class TrendingDialog extends Component {
             {TimeSpans.map((result, i, arr) => {
               return (
                 <TouchableOpacity
+                  key={i}
                   onPress={() => onSelect(arr[i])}
                   underlayColor='transparent'
                 >
                   <View style={styles.text_container}>
                     <Text style={styles.text}>{arr[i].showText}</Text>
-                    {i !== TimeSpans.length - 1 ? <View style={styles.line}/> : null}
                   </View>
+                  {i !== TimeSpans.length - 1 ? <View style={styles.line} /> : null}
                 </TouchableOpacity>
               )
             })}
@@ -76,10 +76,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0.6)'
+    backgroundColor: 'rgba(0, 0, 0, 0.6)'
   },
   arrow: {
-    marginTop: 40,
+    marginTop: 30,
     color: 'white',
     padding: 0,
     margin: -15,
@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     paddingTop: 3,
     paddingBottom: 3,
-    marginRight: 3,
   },
   text_container: {
     flexDirection: 'row',
@@ -100,8 +99,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: '400',
     padding: 8,
-    paddingLeft: 26,
-    paddingLeft: 26,
+    paddingHorizontal: 26,
   },
   line: {
     height: 0.3,

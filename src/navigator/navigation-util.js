@@ -15,6 +15,14 @@ export default class NavigationUtil {
       {...params}
     )
   }
+
+   /**
+     * 返回上一页
+     * @param navigation
+     */
+    static goBack(navigation) {
+      navigation.goBack();
+  }
   
   /**
    * 重置到首页
