@@ -1,0 +1,19 @@
+import {FLAG_STORAGE} from '../expand/dao/data-store';
+
+export default class FavoriteUtil {
+  /**
+   * favoriteIcon单击回调函数
+   * @param favoriteDao
+   * @param item
+   * @param isFavorite
+   * @param flag
+   */
+  static onFavorite(favoriteDao, item, isFavorite, flag) {
+    const key = flag === FLAG_STORAGE.flag_trending ? (item.id ? item.id : item.fullName) : item.id.toString();
+    if (isFavorite) {
+      favoriteDao.saveFavoriteItem(key, JSON.stringify(item));
+    } else {
+      favoriteDao.removeFavoriteItem(key);
+    }
+  }
+}

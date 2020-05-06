@@ -9,24 +9,14 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import HtmlView from 'react-native-htmlview'
 
+import BaseItem from './base-item'
 
-export default class TrendingItem extends Component {
+
+export default class TrendingItem extends BaseItem {
   render () {
-    const {item} = this.props
+    const {projectModel} = this.props
+    const {item} = projectModel
     if (!item) return null;
-    let favoriteButton = (
-      <TouchableOpacity
-        style={{padding: 6}}
-        onPress={() => {}}
-        underlayColor={'transparent'}
-      >
-        <FontAwesome
-          name={'star-o'}
-          size={26}
-          style={{color: 'red'}}
-        />
-      </TouchableOpacity>
-    )
     let description = '<p>' + item.description + '</p>'
     return (
       <TouchableOpacity
@@ -64,7 +54,7 @@ export default class TrendingItem extends Component {
               <Text>Star:</Text>
               <Text>{item.starCount}</Text>
             </View>
-            {favoriteButton}
+            {this._favoriteIcon()}
           </View>
         </View>
 

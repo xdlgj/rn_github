@@ -7,7 +7,7 @@ export default class Utils {
    * @param {*} keys 
    */
   static checkFavorite(item, keys=[]){
-    if (!key) {
+    if (!keys) {
       return false;
     }
     for (let i = 0, len = keys.length; i < len; i++) {

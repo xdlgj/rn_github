@@ -16,10 +16,14 @@ import NavigationUtil from '../navigator/navigation-util'
 import actions from '../action'
 import PopularItem from '../common/popular-item'
 import NavigationBar from '../common/navigation-bar'
+import FavoriteDao from '../expand/dao/favorite-dao'
+import { FLAG_STORAGE } from '../expand/dao/data-store'
+import FavoriteUtil from '../util/favorite-util'
 
 const URL = 'https://api.github.com/search/repositories?q='
 const QUERY_STR = '&sort=stars'
 const THEME_COLOR = '#678'
+const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_popular)
 
 export default class PopularPage extends Component {
   constructor (props) {
@@ -104,11 +108,11 @@ class PopularTab extends Component{
     const store = this._store();
     const url = this.genFetchUrl(this.storeName);
     if (loadMore) {
-      onLoadMorePopular(this.storeName, ++store.pageIndex, pageSize, store.items, callBack => {
+      onLoadMorePopular(this.storeName, ++store.pageIndex, pageSize, store.items, favoriteDao, callBack => {
         this.refs.toast.show('没有更多了');
       })
     } else {
-      onRefreshPopular(this.storeName, url, pageSize)
+      onRefreshPopular(this.storeName, url, pageSize, favoriteDao)
     }
   }
 
@@ -116,10 +120,13 @@ class PopularTab extends Component{
     const item = data.item
     return (
       <PopularItem 
-        item={item}
+        projectModel={item}
         onSelect={() => {
           NavigationUtil.goPage({projectModel: item}, 'DetailPage')
         }}  
+        onFavorite={(item, isFavorite) => {
+          FavoriteUtil.onFavorite(favoriteDao, item, isFavorite, FLAG_STORAGE.flag_popular)
+        }}
       />
     )
   }
@@ -141,9 +148,9 @@ class PopularTab extends Component{
     return (
       <View style={styles.container}>
         <FlatList
-          data={store.projectModes}
+          data={store.projectModels}
           renderItem={data => this.renderItem(data)}
-          keyExtractor={item => '' + item.id}
+          keyExtractor={item => '' + item.item.id}
           refreshControl={
             <RefreshControl
               title={'Loading'}
@@ -183,8 +190,8 @@ const mapStateToProps = state => ({
   popular: state.popular
 })
 const mapDispatchToProps = dispatch => ({
-  onRefreshPopular: (storeName, url, pageSize) => dispatch(actions.onRefreshPopular(storeName, url, pageSize)),
-  onLoadMorePopular: (storeName, pageIndex, pageSize, items, callBack) => dispatch(actions.onLoadMorePopular(storeName, pageIndex, pageSize, items, callBack))
+  onRefreshPopular: (storeName, url, pageSize, favoriteDao) => dispatch(actions.onRefreshPopular(storeName, url, pageSize, favoriteDao)),
+  onLoadMorePopular: (storeName, pageIndex, pageSize, items, favoriteDao, callBack) => dispatch(actions.onLoadMorePopular(storeName, pageIndex, pageSize, items, favoriteDao, callBack))
 })
 
 const PopularTabPage =  connect(mapStateToProps, mapDispatchToProps)(PopularTab)

@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import Trending from 'GitHubTrending'
 
 const AUTH_TOKEN = 'fd82d1e882462e23b8e88aa82198f166'
-export const FLAG_STORAGR = {flag_popular: 'popular', flag_trending: 'trending'}
+export const FLAG_STORAGE  = {flag_popular: 'popular', flag_trending: 'trending'}
 
 export default class DataStore {
   
@@ -44,7 +44,7 @@ export default class DataStore {
    */
   fecthNetData(url, flag) {
     return new Promise((resolve, reject) => {
-      if (flag !== FLAG_STORAGR.flag_trending){
+      if (flag !== FLAG_STORAGE.flag_trending){
         fetch(url, flag)
         .then((response) => {
           if (response.ok) {
@@ -60,7 +60,6 @@ export default class DataStore {
           reject(error);
         })
       } else {
-        console.log(url)
         new Trending(AUTH_TOKEN).fetchTrending(url)
           .then(items => {
             if (!items){
@@ -94,7 +93,7 @@ export default class DataStore {
         }
       }).catch((error) => {
         this.fecthNetData(url).then((data) => {
-          resolve(this._wrapData);
+          resolve(this._wrapData(data));
         }).catch((error) => {
           reject(error);
         })

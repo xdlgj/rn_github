@@ -6,20 +6,19 @@ import {
   Button,
 } from 'react-native'
 import {connect} from 'react-redux'
+import {WebView} from 'react-native-webview'
 
 import actions from '../action'
 
 class FavoritePage extends Component {
   render () {
-    const {navigation} = this.props;
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>FavoritePage</Text>
-        <Button 
-          title={'修改主题'}
-          onPress={() => {this.props.onChangeTheme('orange')}}
+      // <View style={styles.container}>
+        <WebView
+          startInLoadingState={true}
+          source={{uri: 'http://www.finsiot.com/'}}
         />
-      </View>
+      // {/* </View> */}
     )
   }
 }
