@@ -65,6 +65,14 @@ export default function doAction(state = defaultState, action) {
           pageIndex: action.pageIndex,
         }
       }
+    case Types.FLUSH_POPULAR_FAVORITE: //修改收藏状态
+    return {
+      ...state,
+      [action.storeName]: {
+        ...state[action.storeName],
+        projectModels: action.projectModels,
+      }
+    }
     default:
       return state;
     

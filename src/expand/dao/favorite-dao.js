@@ -26,6 +26,7 @@ export default class FavoriteDao {
    * **/
   updateFavoriteKeys(key, isAdd) {
     AsyncStorage.getItem(this.favoriteKey, (error, result) => {
+      
         if (!error) {
             let favoriteKeys = [];
             if (result) {

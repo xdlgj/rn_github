@@ -5,11 +5,14 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import {createAppContainer} from 'react-navigation'
 import {createBottomTabNavigator, BottomTabBar} from 'react-navigation-tabs'
 import {connect} from 'react-redux'
+import EventBus from 'react-native-event-bus'
 
 import PopularPage from '../pages/popular-page'
 import TrendingPage from '../pages/trending-page'
 import FavoritePage from '../pages/favorite-page'
 import MyPage from '../pages/my-page'
+import EventTypes from '../util/event-types'
+
 
 const TABS = { //在这里配置页面的路由
   PopularPage: {
@@ -90,7 +93,16 @@ class DynamicTabNavigator extends Component {
 
   render () {
     const TabNavigator = this._tabNavigator();
-    return <TabNavigator />;
+    return (
+      <TabNavigator
+        onNavigationStateChange={(prevState, newState, action) => {
+          EventBus.getInstance().fireEvent(EventTypes.bottom_tab_select, { //发送底部tab切换的事件
+            from: prevState.index,
+            to: newState.index
+          })
+        }}
+      />
+    )
   }
 }
 
