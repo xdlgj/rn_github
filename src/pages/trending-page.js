@@ -25,29 +25,37 @@ import { FLAG_STORAGE } from '../expand/dao/data-store'
 import FavoriteDao from '../expand/dao/favorite-dao'
 import FavoriteUtil from '../util/favorite-util'
 import EventTypes from '../util/event-types'
+import {FLAG_LANGUAGE} from '../expand/dao/language-dao'
+import ArrayUtil from '../util/array-util'
 
 const URL = 'https://github.com/trending/'
 const THEME_COLOR = '#678'
 const EVENT_TYPE_TIME_SPAN_CHANGE = 'EVENT_TYPE_TIME_SPAN_CHANGE'
 const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_trending)
 
-export default class TrendingPage extends Component {
+class TrendingPage extends Component {
+  debugger
   constructor (props) {
     super(props);
-    this.tabNames = ['All', 'C', 'C#', 'PHP', 'JavaScript']
+    const {onLoadLanguage} = this.props
     this.state = {
-      timeSpan : TimeSpans[0]
+      timeSpan: TimeSpans[0],
     }
+    onLoadLanguage(FLAG_LANGUAGE.flag_language)
+    this.preKeys = []
   }
   _genTabs(){
     const tabs = {};
-    this.tabNames.forEach((item, index) => {
-      tabs[`tab${index}`] = {
-        screen: props => <TrendingTabPage {...props} tabLabel={item} timeSpan={this.state.timeSpan}/>,
-        navigationOptions: {
-          title: item,
-        },
-      };
+    const {keys} = this.props
+    keys.forEach((item, index) => {
+      if (item.checked) {
+        tabs[`tab${index}`] = {
+          screen: props => <TrendingTabPage {...props} tabLabel={item.name} timeSpan={this.state.timeSpan}/>,
+          navigationOptions: {
+            title: item.name,
+          },
+        };
+      }
     });
     return tabs;
   }
@@ -88,7 +96,7 @@ export default class TrendingPage extends Component {
     )
   }
   _tabNav = () => {
-    if (!this.tabNav) {
+    if (!this.tabNav || !ArrayUtil.isEqual(this.preKeys, this.props.keys)) {//优化效率：根据需要选择是否重新创建建TabNavigator，通常tab改变后才重新创建
       this.tabNav = createAppContainer(createMaterialTopTabNavigator(
         this._genTabs(),
         {
@@ -101,13 +109,15 @@ export default class TrendingPage extends Component {
             },
             indicatorStyle: styles.indicatorStyle, //标签指示器样式
             labelStyle: styles.labelStyle, //文本样式
-          }
+          },
+          lazy: true
         }
       ))
     }
     return this.tabNav
   }
   render () {
+    const {keys} = this.props
     let statusBar = {
       backgroundColor: THEME_COLOR
     }
@@ -117,16 +127,26 @@ export default class TrendingPage extends Component {
         style={{backgroundColor: THEME_COLOR}}
 
       />
-    const TabNavigator = this._tabNav()
+    const TabNavigator = keys.length ? this._tabNav() : null
     return (
       <View style={styles.container}>
         {navigationBar}
-        <TabNavigator />
+        {TabNavigator && <TabNavigator />}
         {this.renderTrendingDialog()}
       </View>
     )
   }
 }
+
+const mapTrendingStateProps = state => ({
+  keys: state.language.languages
+})
+const mapTrendingDispatchProps = dispatch => ({
+  onLoadLanguage: (flag) => dispatch(actions.onLoadLanguage(flag))
+})
+export default connect(mapTrendingStateProps, mapTrendingDispatchProps)(TrendingPage)
+
+
 
 const pageSize = 10
 class TrendingTab extends Component{

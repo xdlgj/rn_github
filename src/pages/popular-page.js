@@ -21,6 +21,7 @@ import FavoriteDao from '../expand/dao/favorite-dao'
 import { FLAG_STORAGE } from '../expand/dao/data-store'
 import FavoriteUtil from '../util/favorite-util'
 import eventTypes from '../util/event-types'
+import {FLAG_LANGUAGE} from '../expand/dao/language-dao'
 
 
 const URL = 'https://api.github.com/search/repositories?q='
@@ -28,24 +29,29 @@ const QUERY_STR = '&sort=stars'
 const THEME_COLOR = '#678'
 const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_popular)
 
-export default class PopularPage extends Component {
+class PopularPage extends Component {
   constructor (props) {
     super(props);
-    this.tabNames = ['Java', 'Android', 'IOS', 'Python', 'JS', 'java111111']
+    const {onLoadLanguage} = this.props
+    onLoadLanguage(FLAG_LANGUAGE.flag_key)
   }
   _genTabs(){
     const tabs = {};
-    this.tabNames.forEach((item, index) => {
-      tabs[`tab${index}`] = {
-        screen: props => <PopularTabPage {...props} tabLabel={item}/>,
-        navigationOptions: {
-          title: item,
-        },
-      };
+    const {keys} = this.props
+    keys.forEach((item, index) => {
+      if(item.checked) {
+        tabs[`tab${index}`] = {
+          screen: props => <PopularTabPage {...props} tabLabel={item.name}/>,
+          navigationOptions: {
+            title: item.name,
+          },
+        };
+      }
     });
     return tabs;
   }
   render () {
+    const {keys} = this.props
     let statusBar = {
       backgroundColor: THEME_COLOR
     }
@@ -53,9 +59,8 @@ export default class PopularPage extends Component {
         title={'最热'}
         statusBar={statusBar}
         style={{backgroundColor: THEME_COLOR}}
-
       />
-    const TabNavigator = createAppContainer(createMaterialTopTabNavigator(
+    const TabNavigator = keys.length ? createAppContainer(createMaterialTopTabNavigator(
       this._genTabs(),
       {
         tabBarOptions: {
@@ -67,17 +72,27 @@ export default class PopularPage extends Component {
           },
           indicatorStyle: styles.indicatorStyle, //标签指示器样式
           labelStyle: styles.labelStyle, //文本样式
-        }
+        },
+        lazy: true
       }
-    ))
+    )) : null
     return (
       <View style={styles.container}>
         {navigationBar}
-        <TabNavigator />
+        {TabNavigator && <TabNavigator />}
       </View>
     )
   }
 }
+
+const mapPopularStateToProps = state => ({
+  keys: state.language.keys
+})
+const mapPopularDispatchToProps = dispatch => ({
+  onLoadLanguage: (flag) => dispatch(actions.onLoadLanguage(flag))
+})
+
+export default connect(mapPopularStateToProps, mapPopularDispatchToProps)(PopularPage)
 
 const pageSize = 10
 class PopularTab extends Component{

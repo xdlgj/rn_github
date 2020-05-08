@@ -2,6 +2,7 @@ import {onChangeTheme} from './theme'
 import {onRefreshPopular, onLoadMorePopular, onFlushPopularFavorite} from './popular'
 import {onRefreshTrending, onLoadMoreTrending, onFlushTrendingFavorite} from './trending'
 import {onLoadFavoriteData} from './favorite'
+import {onLoadLanguage} from './language'
 
 export default {
   onChangeTheme,
@@ -12,4 +13,5 @@ export default {
   onLoadMoreTrending,
   onFlushTrendingFavorite,
   onLoadFavoriteData,
+  onLoadLanguage,
 }
