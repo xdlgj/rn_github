@@ -4,8 +4,9 @@ import {createStackNavigator} from 'react-navigation-stack'
 import WelcomePage from '../pages/welcome-page'
 import HomePage from '../pages/home-page'
 import DetailPage from '../pages/detail-page'
-import FetchDemoPage from '../pages/fetch-demo-page'
-import DataStoreDemoPage from '../pages/data-store-demo-page'
+import WebViewPage from '../pages/web-view-page'
+import AboutPage from '../pages/about/about-page'
+import AboutMePage from '../pages/about/about-me-page'
 
 const InitNavigator = createStackNavigator(
   {
@@ -32,12 +33,24 @@ const MainNavigator = createStackNavigator(
         headerShown: false,
       }
     },
-    FetchDemoPage: {
-      screen: FetchDemoPage,
+    WebViewPage: {
+      screen: WebViewPage,
+      navigationOptions: {
+        headerShown: false,
+      }
     },
-    DataStoreDemoPage: {
-      screen: DataStoreDemoPage,
-    }
+    AboutPage: {
+      screen: AboutPage,
+      navigationOptions: {
+        headerShown: false,
+      }
+    },
+    AboutMePage: {
+      screen: AboutMePage,
+      navigationOptions: {
+        headerShown: false,
+      }
+    },
   }
 )
 

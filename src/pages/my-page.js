@@ -15,7 +15,7 @@ import actions from '../action'
 import NavigationUtil from '../navigator/navigation-util'
 import NavigationBar from '../common/navigation-bar'
 import { MORE_MENU } from '../common/more-menu'
-import GlobalStyles from '../res/global-styles'
+import GlobalStyles from '../res/styles/global-styles'
 import ViewUtil from '../util/view-util'
 
 const THEME_COLOR = '#678'
@@ -59,6 +59,23 @@ class MyPage extends Component {
   }
 
   onClick = (menu) => {
+    let RouteName, params = {}
+    switch (menu) {
+      case (MORE_MENU.Tutorial):
+        RouteName = 'WebViewPage'
+        params.title = '教程'
+        params.url = 'https://coding.m.imooc.com/classindex.html?cid=304';
+        break;
+      case (MORE_MENU.About):
+        RouteName = 'AboutPage'
+        break
+      case (MORE_MENU.About_Author):
+        RouteName = 'AboutMePage'
+        break
+    }
+    if (RouteName) {
+      NavigationUtil.goPage(params, RouteName)
+    }
 
   }
 
