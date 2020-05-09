@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   TouchableOpacity,
   ScrollView,
 } from 'react-native'
@@ -19,7 +18,6 @@ import GlobalStyles from '../res/styles/global-styles'
 import ViewUtil from '../util/view-util'
 import {FLAG_LANGUAGE} from '../expand/dao/language-dao'
 
-const THEME_COLOR = '#678'
 
 class MyPage extends Component {
 
@@ -60,7 +58,8 @@ class MyPage extends Component {
   }
 
   onClick = (menu) => {
-    let RouteName, params = {}
+    const {theme} = this.props
+    let RouteName, params = {theme}
     switch (menu) {
       case (MORE_MENU.Tutorial):
         RouteName = 'WebViewPage'
@@ -85,6 +84,10 @@ class MyPage extends Component {
         RouteName = 'SortPage'
         params.flag = menu !== MORE_MENU.Sort_Key ? FLAG_LANGUAGE.flag_language : FLAG_LANGUAGE.flag_key
         break
+      case MORE_MENU.Custom_Theme:
+        const {onShowCustomThemeView} = this.props;
+        onShowCustomThemeView(true);
+        break
     }
     if (RouteName) {
       NavigationUtil.goPage(params, RouteName)
@@ -93,17 +96,18 @@ class MyPage extends Component {
   }
 
   getItem = (menu) => {
-    return ViewUtil.getMenuItem(() => {this.onClick(menu)}, menu, THEME_COLOR)
+    return ViewUtil.getMenuItem(() => {this.onClick(menu)}, menu, this.props.theme.themeColor)
   }
 
   render () {
+    const {theme} = this.props
     let statusBar = {
-      backgroundColor: THEME_COLOR
+      backgroundColor: theme.themeColor
     }
     let navigationBar = <NavigationBar
         title={'我的'}
         statusBar={statusBar}
-        style={{backgroundColor: THEME_COLOR}}
+        style={{backgroundColor: theme.themeColor}}
         rightButton={this.getRightButton()}
         leftButton={this.getLeftButton()}
       />
@@ -119,14 +123,14 @@ class MyPage extends Component {
               <Ionicons
                 name={MORE_MENU.About.icon}
                 size={40}
-                style={{marginRight: 10, color: THEME_COLOR}}
+                style={{marginRight: 10, color: theme.themeColor}}
               />
               <Text>GitHub Popular</Text>
             </View>
             <Ionicons
                 name={'ios-arrow-forward'}
                 size={16}
-                style={{marginRight: 10, alignSelf: 'center',color: THEME_COLOR}}
+                style={{marginRight: 10, alignSelf: 'center', color: theme.themeColor}}
               />
           </TouchableOpacity>
           <View style={GlobalStyles.line}/>
@@ -189,8 +193,13 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapDispatchToProps = dispatch => ({
-  onChangeTheme: theme => dispatch(actions.onChangeTheme(theme))
-})
+const mapStateToProps = state => ({
+  theme: state.theme.theme,
+});
 
-export default connect(null, mapDispatchToProps)(MyPage)
+const mapDispatchToProps = dispatch => ({
+  onShowCustomThemeView: (show) => dispatch(actions.onShowCustomThemeView(show)),
+});
+
+//注意：connect只是个function，并不应定非要放在export后面
+export default connect(mapStateToProps, mapDispatchToProps)(MyPage);

@@ -12,8 +12,6 @@ import actions from '../action/index'
 import BackPressComponent from '../common/back-press-component'
 import ArrayUtil from '../util/array-util'
 
-
-const THEME_COLOR = '#678'
 class SortPage extends Component {
   constructor(props) {
     super(props)
@@ -142,9 +140,11 @@ class SortPage extends Component {
   }
 
   render () {
+    const {theme} = this.params
     let title = this.params.flag === FLAG_LANGUAGE.flag_language ? '语言排序' : '标签排序'; 
     let navigationBar = <NavigationBar
       title={title}
+      style={{backgroundColor: theme.themeColor}}
       leftButton={ViewUtil.getLeftBackButton(this.onBack)}
       rightButton={ViewUtil.getRightButton('保存',this.onSave)} 
     />
@@ -168,7 +168,7 @@ class SortPage extends Component {
 
 class SortCell extends Component {
   render() {
-    //const {theme} = this.props;
+    const {theme} = this.props;
     return (
       <TouchableHighlight
         underlayColor={'#eee'}
@@ -179,7 +179,7 @@ class SortCell extends Component {
           <MaterialCommunityIcons
             name={'sort'}
             size={16}
-            style={{marginRight: 10, color: THEME_COLOR}}/>
+            style={{marginRight: 10, color: theme.themeColor}}/>
           <Text>{this.props.data.name}</Text>
         </View>
     </TouchableHighlight>

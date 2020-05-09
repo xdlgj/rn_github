@@ -9,8 +9,6 @@ import ViewUtil from '../../util/view-util'
 import ShareUtil from '../../util/share-util'
 import share from '../../res/data/share.json'
 
-const THENE_COLOR = '#678'
-
 export const FLAG_ABOUT = {flag_about: 'about', flag_about_me: 'about_me'}
 export default class AboutCommon {
   constructor(props, updateState) {
@@ -114,11 +112,11 @@ export default class AboutCommon {
   }
 
   render(contentView, params) {
-    //const {theme} = this.props
+    const {theme} = this.props
     const renderConfig = this.getParallaxRenderConfig(params)
     return (
       <ParallaxScrollView
-        backgroundColor={THENE_COLOR}
+        backgroundColor={theme.themeColor}
         contentBackgroundColor={GlobalStyles.backgroundColor}
         parallaxHeaderHeight={PARALLAX_HEADER_HEIGHT}
         stickyHeaderHeight={STICKY_HEADER_HEIGHT}

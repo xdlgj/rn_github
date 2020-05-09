@@ -16,34 +16,33 @@ import FavoriteUtil from '../util/favorite-util'
 import TrendingItem from '../common/trending-item'
 import EventTypes from '../util/event-types'
 
-const THEME_COLOR = '#678'
 
-export default class FavoritePage extends Component {
+class FavoritePage extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    //const {theme} = this.props;
+    const {theme} = this.props;
     let statusBar = {
-      backgroundColor: THEME_COLOR,
+      backgroundColor: theme.themeColor,
       barStyle: 'light-content',
     };
     let navigationBar = <NavigationBar
       title={'收藏'}
       statusBar={statusBar}
-      style={{backgroundColor: THEME_COLOR}}
+      style={{backgroundColor: theme.themeColor}}
     />;
     const TabNavigator = createAppContainer(createMaterialTopTabNavigator(
       {
         'Popular': {
-          screen: props => <FavoriteTabPage {...props} flag={FLAG_STORAGE.flag_popular} theme={THEME_COLOR}/>,//初始化Component时携带默认参数 @https://github.com/react-navigation/react-navigation/issues/2392
+          screen: props => <FavoriteTabPage {...props} flag={FLAG_STORAGE.flag_popular} theme={theme}/>,//初始化Component时携带默认参数 @https://github.com/react-navigation/react-navigation/issues/2392
           navigationOptions: {
             title: '最热',
           },
         },
         'Trending': {
-          screen: props => <FavoriteTabPage {...props} flag={FLAG_STORAGE.flag_trending} theme={THEME_COLOR}/>,//初始化Component时携带默认参数 @https://github.com/react-navigation/react-navigation/issues/2392
+          screen: props => <FavoriteTabPage {...props} flag={FLAG_STORAGE.flag_trending} theme={theme}/>,//初始化Component时携带默认参数 @https://github.com/react-navigation/react-navigation/issues/2392
           navigationOptions: {
             title: '趋势',
           },
@@ -54,7 +53,7 @@ export default class FavoritePage extends Component {
           tabStyle: styles.tabStyle,
           upperCaseLabel: false,//是否使标签大写，默认为true
           style: {
-            backgroundColor: 'red',//TabBar 的背景颜色
+            backgroundColor: theme.themeColor,//TabBar 的背景颜色
             // 移除以适配react-navigation4x
             // height: 30,//fix 开启scrollEnabled后再Android上初次加载时闪烁问题
           },
@@ -72,11 +71,11 @@ export default class FavoritePage extends Component {
   }
 }
 
-// const mapFavoriteStateToProps = state => ({
-//   theme: state.theme.theme,
-// });
+const mapFavoriteStateToProps = state => ({
+  theme: state.theme.theme,
+});
 //注意：connect只是个function，并不应定非要放在export后面
-// export default connect(mapFavoriteStateToProps)(FavoritePage);
+export default connect(mapFavoriteStateToProps)(FavoritePage);
 
 class FavoriteTab extends Component {
   constructor(props) {
@@ -132,16 +131,16 @@ class FavoriteTab extends Component {
   }
 
   renderItem(data) {
-    //const {theme} = this.props;
+    const {theme} = this.props;
     const item = data.item;
     const Item = this.storeName === FLAG_STORAGE.flag_popular ? PopularItem : TrendingItem;
     return (
       <Item
-        //theme={theme}
+        theme={theme}
         projectModel={item}
         onSelect={(callback) => {
           NavigationUtil.goPage({
-            //theme,
+            theme,
             projectModel: item,
             flag: this.storeName,
             callback,
@@ -154,7 +153,7 @@ class FavoriteTab extends Component {
 
   render() {
     let store = this._store();
-    //const {theme} = this.props;
+    const {theme} = this.props;
     return (
       <View style={styles.container}>
         <FlatList
@@ -164,11 +163,11 @@ class FavoriteTab extends Component {
           refreshControl={
               <RefreshControl
                 title={'Loading'}
-                titleColor={THEME_COLOR}
-                colors={[THEME_COLOR]}
+                titleColor={theme.themeColor}
+                colors={[theme.themeColor]}
                 refreshing={store.isLoading}
                 onRefresh={() => this.loadData(true)}
-                tintColor={THEME_COLOR}
+                tintColor={theme.themeColor}
               />
             }
         />

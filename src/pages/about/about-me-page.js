@@ -10,8 +10,6 @@ import AboutCommon, {FLAG_ABOUT} from './about-common'
 import config from '../../res/data/config'
 import GlobalStyles from '../../res/styles/global-styles'
 
-const THEME_COLOR = '#678'
-
 export default class AboutMePage extends Component {
   constructor(props) {
     super(props);
@@ -61,16 +59,17 @@ export default class AboutMePage extends Component {
 
   getItem(menu) {
     const {theme} = this.params;
-    return ViewUtil.getMenuItem(() => this.onClick(menu), menu, THEME_COLOR);
+    return ViewUtil.getMenuItem(() => this.onClick(menu), menu, theme.themeColor);
   }
 
   _item(data, isShow, key) {
+    const {theme} = this.params
     return (
       ViewUtil.getSettingItem(() => {
         this.setState({
           [key]: !this.state[key]
         })
-      }, data.name, THEME_COLOR, Ionicons, data.icon, isShow ? 'ios-arrow-up' : 'ios-arrow-down')
+      }, data.name, theme.themeColor, Ionicons, data.icon, isShow ? 'ios-arrow-up' : 'ios-arrow-down')
     )
   }
 
@@ -89,7 +88,7 @@ export default class AboutMePage extends Component {
       let title = isShowAccount ? dic[i].title + ':' + dic[i].account : dic[i].title;
       views.push(
         <View key={i}>
-          {ViewUtil.getSettingItem(() => this.onClick(dic[i]), title, THEME_COLOR)}
+          {ViewUtil.getSettingItem(() => this.onClick(dic[i]), title, theme.themeColor)}
           <View style={GlobalStyles.line}/>
         </View>,
       );

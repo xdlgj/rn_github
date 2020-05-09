@@ -13,8 +13,6 @@ import NavigationUtil from '../navigator/navigation-util'
 import BackPressComponent from '../common/back-press-component'
 import FavoriteDao from '../expand/dao/favorite-dao'
 
-
-const THENE_COLOR = '#678';
 const TRENDING_URL = 'https://github.com/';
 export default class DetailPage extends Component {
   constructor(props) {
@@ -94,12 +92,13 @@ export default class DetailPage extends Component {
   }
 
   render () {
+    const {theme} = this.props.navigation.state.params
     const titleLayoutStyle = this.state.title.length > 20 ? {paddingRight: 30} : null
     let navigationBar = <NavigationBar
       title={this.state.title}
       leftButton={ViewUtil.getLeftBackButton(() => {this.onBack()})}
       rightButton={this.renderRightButton()}
-      style={{backgroundColor: THENE_COLOR}}
+      style={{backgroundColor: theme.themeColor}}
       titleLayoutStyle={titleLayoutStyle}
     />
     return (

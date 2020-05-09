@@ -8,7 +8,6 @@ import AboutCommon, {FLAG_ABOUT} from './about-common'
 import config from '../../res/data/config'
 import GlobalStyles from '../../res/styles/global-styles'
 
-const THEME_COLOR = '#678'
 
 export default class AboutPage extends Component {
   constructor(props) {
@@ -68,7 +67,7 @@ export default class AboutPage extends Component {
 
   getItem(menu) {
     const {theme} = this.params;
-    return ViewUtil.getMenuItem(() => this.onClick(menu), menu, THEME_COLOR);
+    return ViewUtil.getMenuItem(() => this.onClick(menu), menu, theme.themeColor);
   }
 
   render() {

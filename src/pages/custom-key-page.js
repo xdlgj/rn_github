@@ -14,7 +14,6 @@ import ArrayUtil from '../util/array-util';
 
 //import SafeAreaViewPlus from '../common/SafeAreaViewPlus';
 
-const THEME_COLOR = '#678'
 
 class CustomKeyPage extends Component {
   constructor(props) {
@@ -145,7 +144,7 @@ class CustomKeyPage extends Component {
         name={checked ? 'ios-checkbox' : 'md-square-outline'}
         size={20}
         style={{
-          color: THEME_COLOR,
+          color: theme.themeColor,
         }}
       />
     ) 
@@ -188,13 +187,13 @@ class CustomKeyPage extends Component {
       let navigationBar = <NavigationBar
           title={title}
           leftButton={ViewUtil.getLeftBackButton(() => this.onBack())}
-          style={{backgroundColor: THEME_COLOR}}
+          style={{backgroundColor: theme.themeColor}}
           rightButton={ViewUtil.getRightButton(rightButtonTitle, () => this.onSave())}
       />;
       return (
         <View
           style={styles.container}
-          topColor={THEME_COLOR}
+          topColor={theme.themeColor}
         >
           {navigationBar}
         <ScrollView>

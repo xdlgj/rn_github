@@ -9,7 +9,6 @@ import BackPressComponent from '../common/back-press-component';
 //import SafeAreaViewPlus from '../common/SafeAreaViewPlus';
 import GlobalStyles from '../res/styles/global-styles';
 
-const THEME_COLOR = '#678'
 
 export default class WebViewPage extends Component {
     constructor(props) {
@@ -56,7 +55,7 @@ export default class WebViewPage extends Component {
       const {theme} = this.params;
       let navigationBar = <NavigationBar
         title={this.state.title}
-        style={{backgroundColor: THEME_COLOR}}
+        style={{backgroundColor: theme.themeColor}}
         leftButton={ViewUtil.getLeftBackButton(() => this.onBackPress())}
       />;
 
