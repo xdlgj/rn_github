@@ -53,8 +53,12 @@ export default class WebViewPage extends Component {
 
     render() {
       const {theme} = this.params;
+      let statusBar = {
+        backgroundColor: theme.themeColor
+      }
       let navigationBar = <NavigationBar
         title={this.state.title}
+        statusBar={statusBar}
         style={{backgroundColor: theme.themeColor}}
         leftButton={ViewUtil.getLeftBackButton(() => this.onBackPress())}
       />;
@@ -78,6 +82,5 @@ export default class WebViewPage extends Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      marginTop: DeviceInfo.isIPhoneX_deprecated ? 30 : 0,
     },
 });

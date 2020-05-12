@@ -5,13 +5,15 @@ import {
   ViewPropTypes, 
   StatusBar, 
   StyleSheet, 
-  Platform
+  Platform,
+  NativeModules,
 } from 'react-native'
 import PropTypes from 'prop-types'
 
+const { StatusBarManager } = NativeModules;
 const NAV_BAR_HEIGHT_IOS = 44 //导航栏在IOS中的高度
 const NAVBAR_HEIGHT_ANDROID = 50 //导航栏在android中的高低
-const STATUS_BAR_HEIGHT = 20 //状态栏中的高度
+const STATUS_BAR_HEIGHT = StatusBarManager.HEIGHT //状态栏中的高度
 const StatusBarShape = {
   barStyle: PropTypes.oneOf(['light-content', 'default']),
   hidden: PropTypes.bool,
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: Platform.OS === 'ios' ? NAV_BAR_HEIGHT_IOS : NAVBAR_HEIGHT_ANDROID
+    height: Platform.OS === 'ios' ? NAV_BAR_HEIGHT_IOS : NAVBAR_HEIGHT_ANDROID,
   },
   navBarTitleContainer: {
     alignItems: 'center',
