@@ -21,26 +21,6 @@ import {FLAG_LANGUAGE} from '../expand/dao/language-dao'
 
 class MyPage extends Component {
 
-  getRightButton = () => {
-    return (
-      <View style={{flexDirection:'row'}}>
-        <TouchableOpacity
-          onPress={() => {
-
-          }}
-        >
-          <View style={{padding: 5, marginLeft: 8}}>
-            <Feather
-              name={'search'}
-              size={24}
-              style={{color: 'white'}}
-            />
-          </View>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-
   getLeftButton = (callBack) => {
     return (
       <TouchableOpacity
@@ -108,7 +88,6 @@ class MyPage extends Component {
         title={'我的'}
         statusBar={statusBar}
         style={{backgroundColor: theme.themeColor}}
-        rightButton={this.getRightButton()}
         leftButton={this.getLeftButton()}
       />
     return (

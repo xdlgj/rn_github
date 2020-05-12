@@ -6,12 +6,14 @@ import {
   FlatList,
   RefreshControl,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native'
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs'
 import {createAppContainer} from 'react-navigation'
 import {connect} from 'react-redux'
 import Toast from 'react-native-easy-toast'
 import EventBus from 'react-native-event-bus'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import NavigationUtil from '../navigator/navigation-util'
 import actions from '../action'
@@ -49,6 +51,32 @@ class PopularPage extends Component {
     });
     return tabs;
   }
+
+  renderRightButton = () => {
+    const {theme} = this.props;
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          //新版本友盟SDK 时间统计方法由 track -> onEvent
+          //AnalyticsUtil.onEvent('SearchButtonClick');
+          NavigationUtil.goPage({theme}, 'SearchPage');
+        }}
+      >
+      <View style={{padding: 5, marginRight: 8}}>
+        <Ionicons
+          name={'ios-search'}
+          size={24}
+          style={{
+            marginRight: 8,
+            alignSelf: 'center',
+            color: 'white',
+          }}
+        />
+      </View>
+    </TouchableOpacity>
+    )
+     
+}
   render () {
     const {keys, theme} = this.props
     let statusBar = {
@@ -57,6 +85,7 @@ class PopularPage extends Component {
     let navigationBar = <NavigationBar 
       title={'最热'}
       statusBar={statusBar}
+      rightButton={this.renderRightButton()}
       style={{backgroundColor: theme.themeColor}}
     />
     const TabNavigator = keys.length ? createAppContainer(createMaterialTopTabNavigator(
